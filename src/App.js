@@ -44,12 +44,19 @@ class App extends Component {
     });
   };
 
+  handleExerciseCreate = exercise => {
+    // method adds a new exercise object to the state
+    this.setState(prevState => {
+      return { exercises: [...prevState.exercises, exercise] };
+    });
+  };
+
   render() {
     const exercises = this.getExercisesByMuscles();
     const { category, exercise } = this.state;
     return (
       <Fragment>
-        <Header />
+        <Header muscles={muscles} onCreate={this.handleExerciseCreate} />
         <Exercises
           exercise={exercise}
           category={category}
