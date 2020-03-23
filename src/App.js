@@ -12,30 +12,42 @@ class App extends Component {
   };
 
   getExercisesByMuscles() {
+    // create the initial set of categories to maintain the category list,
+    // incase all the exercises in a category get deleted.
+    const initialExercises = muscles.reduce((exercises, muscles) => {
+      return {
+        ...exercises,
+        [muscles]: []
+      };
+    }, {});
+
     return Object.entries(
       this.state.exercises.reduce((exercises, exercise) => {
         // destructure out the muscle property from the object
         const { muscles } = exercise;
 
-        // the initial value of the iteration is set to an empty object
-        // take the exercise and conditionally assign a property on it
-        exercises[muscles] = exercises[muscles]
-          ? // if there is already something stored in that property
-            // spread out the elements from that array into a new array and pass the exersise object
-            [...exercises[muscles], exercise]
-          : // otherwise create a new array with the current exercise object
-            [exercise];
+        exercises[muscles] = [...exercises[muscles], exercise];
+
         // return the exercises
         return exercises;
-      }, {})
+      }, initialExercises)
     );
   }
 
-  handleCategorySelected = category => {
+  handleExerciseDelete = id => {
+    // return all the exercises that dont match the id
+    this.setState(prevState => {
+      return {
+        exercises: prevState.exercises.filter(exercise => exercise.id !== id)
+      };
+    });
+  };
+
+  handleCategorySelect = category => {
     this.setState({ category });
   };
 
-  handleExerciseSelected = id => {
+  handleExerciseSelect = id => {
     this.setState(prevState => {
       // return the exercise matching the selected id
       return {
@@ -58,15 +70,16 @@ class App extends Component {
       <Fragment>
         <Header muscles={muscles} onCreate={this.handleExerciseCreate} />
         <Exercises
+          onDelete={this.handleExerciseDelete}
           exercise={exercise}
           category={category}
           exercises={exercises}
-          onSelect={this.handleExerciseSelected}
+          onSelect={this.handleExerciseSelect}
         />
         <Footer
           category={category}
           muscles={muscles}
-          onSelect={this.handleCategorySelected}
+          onSelect={this.handleCategorySelect}
         />
       </Fragment>
     );

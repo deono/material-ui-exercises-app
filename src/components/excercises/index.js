@@ -6,8 +6,11 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 // import { muscles } from "../../store";
 
 const useStyles = makeStyles(theme => ({
@@ -21,6 +24,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default ({
+  onDelete,
   exercises,
   category,
   onSelect,
@@ -53,6 +57,15 @@ export default ({
                     return (
                       <ListItem onClick={() => onSelect(id)} key={id} button>
                         <ListItemText primary={title} />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            onClick={() => onDelete(id)}
+                            edge="end"
+                            aria-label="delete"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </ListItemSecondaryAction>
                       </ListItem>
                     );
                   })}
